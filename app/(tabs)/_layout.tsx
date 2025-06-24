@@ -6,6 +6,7 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import Logout from '@/components/Logout';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -14,7 +15,8 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
+        headerShown: true,
+        headerRight: () => <Logout />,
         tabBarButton: HapticTab,
         tabBarBackground: TabBarBackground,
         tabBarStyle: Platform.select({
@@ -47,7 +49,7 @@ export default function TabLayout() {
           tabBarIcon: ({ focused, color }) => (
             <IconSymbol
               size={28}
-              name={focused ? 'home' : 'home-outline'}
+              name={focused ? 'search' : 'search-outline'}
               color={color}
             />
           )
@@ -61,7 +63,7 @@ export default function TabLayout() {
           tabBarIcon: ({ focused, color }) => (
             <IconSymbol
               size={28}
-              name={focused ? 'home' : 'home-outline'}
+              name={focused ? 'add' : 'add-outline'}
               color={color}
             />
           )
@@ -75,7 +77,7 @@ export default function TabLayout() {
           tabBarIcon: ({ focused, color }) => (
             <IconSymbol
               size={28}
-              name={focused ? 'home' : 'home-outline'}
+              name={focused ? 'star' : 'star-outline'}
               color={color}
             />
           )
@@ -83,16 +85,24 @@ export default function TabLayout() {
       />
 
       <Tabs.Screen
-        name="profile"
+        name="profile/index"
         options={{
           title: 'Profile',
           tabBarIcon: ({ focused, color }) => (
             <IconSymbol
               size={28}
-              name={focused ? 'home' : 'home-outline'}
+              name={focused ? 'person' : 'person-outline'}
               color={color}
             />
           )
+        }}
+      />
+
+      <Tabs.Screen
+        name="profile/[id]"
+        options={{
+          title: 'Profile',
+          href: null,
         }}
       />
 
