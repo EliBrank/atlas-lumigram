@@ -1,10 +1,8 @@
 import { Colors } from '@/constants/Colors';
-import { Link, useRouter } from 'expo-router';
-import { Pressable, StyleSheet, Text, View, TextInput, Image } from 'react-native';
+import { Link, router } from 'expo-router';
+import { StyleSheet, Text, View, TextInput, Image, Pressable } from 'react-native';
 
 export default function Login() {
-  const router = useRouter();
-
   return (
     <View style={styles.container}>
 
@@ -15,29 +13,37 @@ export default function Login() {
 
       <Text style={styles.textTitle}>Login</Text>
 
-      <TextInput
-        placeholder='Email'
-        placeholderTextColor={Colors.dark.text}
-        style={styles.inputContainer}
-      />
+      <View style={styles.credentials}>
+        <TextInput
+          placeholder='Email'
+          placeholderTextColor={Colors.dark.text}
+          style={[styles.textDefault, styles.inputContainer]}
+        />
+        <TextInput
+          placeholder='Password'
+          placeholderTextColor={Colors.dark.text}
+          style={[styles.textDefault, styles.inputContainer]}
+        />
+      </View>
 
-      <TextInput
-        placeholder='Password'
-        placeholderTextColor={Colors.dark.text}
-        style={styles.inputContainer}
-      />
-
-      <Link href='/register' replace>
-        <Text style={styles.textDefault}>Create a new account</Text>
-      </Link>
-
-      <Pressable
-        onPress={() => {
-          router.replace('/(tabs)');
-        }}
-      >
-        <Text style={styles.textDefault}>Sign in</Text>
-      </Pressable>
+      <View style={styles.buttonContainer}>
+        <Pressable
+          onPress={() => {
+            router.replace('/(tabs)');
+          }}
+          style={styles.button}
+        >
+          <Text style={styles.textDefault}>Sign in</Text>
+        </Pressable>
+        <Pressable
+          onPress={() => {
+            router.replace('/register');
+          }}
+          style={[styles.button, styles.buttonSecondary]}
+        >
+          <Text style={styles.textDefault}>Create a new account</Text>
+        </Pressable>
+      </View>
 
     </View>
   );
@@ -52,9 +58,10 @@ const styles = StyleSheet.create({
     paddingInline: 20,
   },
   logo: {
-    width: '50%',
+    width: '70%',
     maxHeight: 100,
     resizeMode: 'contain',
+    marginBottom: 24,
   },
   textDefault: {
     color: Colors.dark.text,
@@ -62,16 +69,40 @@ const styles = StyleSheet.create({
   textTitle: {
     color: Colors.dark.text,
     fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 16,
+  },
+  credentials: {
+    marginBottom: 24,
+    width: '100%',
   },
   inputContainer: {
     justifyContent: 'center',
     borderColor: Colors.accent,
-    borderWidth: 2,
-    padding: 16,
+    borderWidth: 1,
+    padding: 12,
     width: '100%',
-    minHeight: 40,
+    minHeight: 52,
     marginBottom: 10,
     borderRadius: 4,
+  },
+  buttonContainer: {
+    width: '100%',
+  },
+  button: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: Colors.accent,
+    paddingInline: 12,
+    width: '100%',
+    minHeight: 46,
+    marginBottom: 16,
+    borderRadius: 4,
+  },
+  buttonSecondary: {
+    outlineWidth: 1,
+    outlineColor: '#000',
+    backgroundColor: undefined,
   }
 });
 
