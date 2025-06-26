@@ -20,6 +20,7 @@ export default function AddPage() {
             label="Choose a photo"
             includeImage
             onPress={openImagePicker}
+            style={{ marginTop: 16 }}
           />
         )}
       </View>

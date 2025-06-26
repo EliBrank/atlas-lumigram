@@ -1,24 +1,44 @@
-import { View, Image, StyleSheet } from 'react-native';
+import { View, Image, StyleSheet, Text } from 'react-native';
+import placeholder from '@/assets/images/placeholder.png';
 
 type ImagePreviewProps = {
   imageUrl?: string;
-}
+};
 
 export function ImagePreview({ imageUrl }: ImagePreviewProps) {
-  const url = imageUrl ? imageUrl : '/assets/images/placeholder.png';
   return (
-    <Image
-      source={{ uri: url }}
-      style={styles.image}
-    />
+    <View style={styles.container}>
+      {!imageUrl && (
+        <Image
+          source={placeholder}
+          style={styles.placeholderImage}
+        />
+      )}
+      {imageUrl && (
+        <Image
+          source={{ uri: imageUrl }}
+          style={styles.image}
+        />
+      )}
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  image: {
-    width: '90%',
+  container: {
+    justifyContent: 'center',
+    width: '100%',
     aspectRatio: 1,
     borderRadius: 20,
+    overflow: 'hidden',
   },
+  image: {
+    width: '100%',
+    aspectRatio: 1,
+  },
+  placeholderImage: {
+    maxWidth: '100%',
+    resizeMode: 'contain',
+  }
 });
 

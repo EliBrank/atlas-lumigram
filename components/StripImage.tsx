@@ -23,7 +23,8 @@ export default function StripImage({
 
   const longPress = Gesture.LongPress()
     .onStart(() => setShowOverlay(true))
-    .onEnd(() => setShowOverlay(false));
+    .onEnd(() => setShowOverlay(false))
+    .runOnJS(true);
 
   const doubleTap = Gesture.Tap()
     .maxDuration(250)
@@ -31,7 +32,8 @@ export default function StripImage({
     .onStart(() => {
       // TODO: add favorite functionality
       alert('Favorited!');
-    });
+    })
+    .runOnJS(true);
 
   return (
     <GestureDetector gesture={Gesture.Exclusive(longPress, doubleTap)}>
@@ -42,7 +44,7 @@ export default function StripImage({
         />
         {showOverlay && (
           <View style={styles.overlay}>
-            <Text>{caption}</Text>
+            <Text style={styles.captionText}>{caption}</Text>
           </View>
         )}
       </View>
@@ -67,5 +69,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: Colors.dark.background,
   },
+  captionText: {
+    color: Colors.dark.text,
+  }
 });
 
