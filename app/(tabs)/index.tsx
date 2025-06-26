@@ -1,20 +1,22 @@
-import { Link } from 'expo-router';
 import { StyleSheet, Text, View } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
-import GalleryImage from '@/components/GalleryImage';
+import StripImage from '@/components/StripImage';
 import { homeFeed } from '@/placeholder';
 
 export default function Home() {
+  // useEffect to bring in images from db?
+
   return (
     <View style={styles.container}>
       <FlashList
         data={homeFeed}
         renderItem={({ item }) => (
-          <GalleryImage
+          <StripImage
             url={item.image}
             caption={item.caption}
             id={item.id}
             createdBy={item.createdBy}
+            imageStyle={{ marginBottom: 16 }}
           />
         )}
         estimatedItemSize={100}
