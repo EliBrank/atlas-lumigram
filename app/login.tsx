@@ -1,6 +1,7 @@
 import { Colors } from '@/constants/Colors';
-import { Link, router } from 'expo-router';
-import { StyleSheet, Text, View, TextInput, Image, Pressable } from 'react-native';
+import { router } from 'expo-router';
+import { StyleSheet, Text, View, TextInput, Image } from 'react-native';
+import { Button } from '@/components/Button';
 
 export default function Login() {
   return (
@@ -17,32 +18,31 @@ export default function Login() {
         <TextInput
           placeholder='Email'
           placeholderTextColor={Colors.dark.text}
-          style={[styles.textDefault, styles.inputContainer]}
+          style={styles.inputContainer}
         />
         <TextInput
           placeholder='Password'
           placeholderTextColor={Colors.dark.text}
-          style={[styles.textDefault, styles.inputContainer]}
+          style={styles.inputContainer}
         />
       </View>
 
       <View style={styles.buttonContainer}>
-        <Pressable
+        <Button
+          variant="primary"
+          label="Sign in"
           onPress={() => {
             router.replace('/(tabs)');
           }}
-          style={styles.button}
-        >
-          <Text style={styles.textDefault}>Sign in</Text>
-        </Pressable>
-        <Pressable
+          style={{ marginBottom: 12 }}
+        />
+        <Button
+          variant="secondary"
+          label="Create a new account"
           onPress={() => {
             router.replace('/register');
           }}
-          style={[styles.button, styles.buttonSecondary]}
-        >
-          <Text style={styles.textDefault}>Create a new account</Text>
-        </Pressable>
+        />
       </View>
 
     </View>
@@ -63,9 +63,6 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
     marginBottom: 24,
   },
-  textDefault: {
-    color: Colors.dark.text,
-  },
   textTitle: {
     color: Colors.dark.text,
     fontSize: 24,
@@ -77,6 +74,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   inputContainer: {
+    color: Colors.dark.text,
     justifyContent: 'center',
     borderColor: Colors.accent,
     borderWidth: 1,
@@ -89,20 +87,5 @@ const styles = StyleSheet.create({
   buttonContainer: {
     width: '100%',
   },
-  button: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: Colors.accent,
-    paddingInline: 12,
-    width: '100%',
-    minHeight: 46,
-    marginBottom: 16,
-    borderRadius: 4,
-  },
-  buttonSecondary: {
-    outlineWidth: 1,
-    outlineColor: '#000',
-    backgroundColor: undefined,
-  }
 });
 
