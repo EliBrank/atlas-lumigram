@@ -1,28 +1,49 @@
 import { useState } from 'react';
-import { StyleSheet } from 'react-native';
-import { Text, View } from 'react-native';
-// import { ImagePreview } from '@/components/ImagePreview';
+import { Text, View, StyleSheet, TextInput, Image } from 'react-native';
 import { Button } from '@/components/Button';
+import { useImagePicker } from '@/hooks/useImagePicker';
+import { ImagePreview } from '@/components/ImagePreview';
+import { Colors } from '@/constants/Colors';
 
 export default function AddPage() {
   const [caption, setCaption] = useState<string>('');
   const [loading, isLoading] = useState(false);
-  const image = undefined;
+  const { image, openImagePicker, reset } = useImagePicker();
 
   return (
     <View style={styles.container}>
-      {/* <ImagePreview src={image} /> */}
+      <ImagePreview imageUrl={image} />
       <View style={styles.footerContainer}>
         {!image && (
           <Button
             variant="primary"
             label="Choose a photo"
             includeImage
-            onPress={() => alert('Choose a photo')}
+            onPress={openImagePicker}
           />
         )}
       </View>
-      <Text style={{ color: '#999' }}>Add Post</Text>
+      {image && (
+        <View style={{ width: '100%' }}>
+          <View>
+            <TextInput
+              placeholder='Add a caption'
+              style={styles.captionInput}
+            />
+            <Button
+              variant="primary"
+              label="Save"
+              onPress={() => alert('Save')}
+            />
+            <Button
+              variant="plain"
+              label="Reset"
+              onPress={() => alert('Reset')}
+              textInvert
+            />
+          </View>
+        </View>
+      )}
     </View>
   );
 }
@@ -32,10 +53,21 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingInline: 20,
+    paddingTop: 20,
     width: '100%',
+  },
+  image: {
+    width: '100%',
+    aspectRatio: 1,
   },
   footerContainer: {
     width: '100%',
   },
+  captionInput: {
+    outlineWidth: 1,
+    outlineColor: Colors.accent,
+    marginBlock: 16,
+    padding: 12,
+  }
 });
 
