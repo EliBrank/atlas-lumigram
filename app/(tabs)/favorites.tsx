@@ -15,6 +15,7 @@ export default function Favorites() {
             id={item.id}
             createdBy={item.createdBy}
             imageStyle={{ marginBottom: 16 }}
+            disableFavorite
           />
         )}
         estimatedItemSize={100}

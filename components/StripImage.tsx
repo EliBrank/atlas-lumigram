@@ -10,6 +10,7 @@ type StripImageProps = {
   caption?: string;
   createdBy?: string;
   imageStyle?: StyleProp<ViewStyle>;
+  disableFavorite?: true;
 }
 
 export default function StripImage({
@@ -17,7 +18,8 @@ export default function StripImage({
   id,
   caption,
   createdBy,
-  imageStyle
+  imageStyle,
+  disableFavorite
 }: StripImageProps) {
   const [showOverlay, setShowOverlay] = useState(false);
 
@@ -31,7 +33,7 @@ export default function StripImage({
     .numberOfTaps(2)
     .onStart(() => {
       // TODO: add favorite functionality
-      alert('Favorited!');
+      if (!disableFavorite) alert('Favorited!');
     })
     .runOnJS(true);
 
