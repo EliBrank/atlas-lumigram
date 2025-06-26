@@ -21,12 +21,20 @@ export default function StripImage({
 }: StripImageProps) {
   const [showOverlay, setShowOverlay] = useState(false);
 
-  const longPressGesture = Gesture.LongPress()
+  const longPress = Gesture.LongPress()
     .onStart(() => setShowOverlay(true))
     .onEnd(() => setShowOverlay(false));
 
+  const doubleTap = Gesture.Tap()
+    .maxDuration(250)
+    .numberOfTaps(2)
+    .onStart(() => {
+      // TODO: add favorite functionality
+      alert('Favorited!');
+    });
+
   return (
-    <GestureDetector gesture={longPressGesture}>
+    <GestureDetector gesture={Gesture.Exclusive(longPress, doubleTap)}>
       <View style={[styles.container, imageStyle]}>
         <Image
           source={{ uri: url }}
