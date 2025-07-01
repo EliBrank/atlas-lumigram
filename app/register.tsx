@@ -1,9 +1,25 @@
 import { Colors } from '@/constants/Colors';
-import { router } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { StyleSheet, Text, View, TextInput, Image } from 'react-native';
 import { Button } from '@/components/Button';
+import { useAuth } from '@/components/AuthProvider';
+import { useState } from 'react';
 
 export default function Register() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const auth = useAuth();
+  const router = useRouter();
+
+  async function register() {
+    try {
+      await auth.register(email, password);
+      router.replace('/(tabs)');
+    } catch(error) {
+      alert('Unable to create account')
+    }
+  }
+
   return (
     <View style={styles.container}>
 
@@ -19,21 +35,21 @@ export default function Register() {
           placeholder='Email'
           placeholderTextColor={Colors.dark.text}
           style={styles.inputContainer}
+          onChangeText={setEmail}
         />
         <TextInput
           placeholder='Password'
           placeholderTextColor={Colors.dark.text}
           style={styles.inputContainer}
+          onChangeText={setPassword}
         />
       </View>
 
-      <View style={styles.buttonContainer}>
+      <View style={styles.buttonsContainer}>
         <Button
           variant="primary"
           label="Create Account"
-          onPress={() => {
-            router.replace('/(tabs)');
-          }}
+          onPress={register}
           style={{ marginBottom: 12 }}
         />
         <Button
@@ -84,7 +100,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     borderRadius: 4,
   },
-  buttonContainer: {
+  buttonsContainer: {
     width: '100%',
   },
 });

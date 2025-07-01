@@ -2,8 +2,23 @@ import { Colors } from '@/constants/Colors';
 import { router } from 'expo-router';
 import { StyleSheet, Text, View, TextInput, Image } from 'react-native';
 import { Button } from '@/components/Button';
+import { useAuth } from '@/components/AuthProvider';
+import { useState } from 'react';
 
 export default function Login() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const auth = useAuth();
+
+  async function login() {
+    try {
+      await auth.login(email, password);
+      router.replace('/(tabs)');
+    } catch(error) {
+      alert('Email or password incorrect')
+    }
+  }
+
   return (
     <View style={styles.container}>
 
@@ -19,11 +34,13 @@ export default function Login() {
           placeholder='Email'
           placeholderTextColor={Colors.dark.text}
           style={styles.inputContainer}
+          onChangeText={setEmail}
         />
         <TextInput
           placeholder='Password'
           placeholderTextColor={Colors.dark.text}
           style={styles.inputContainer}
+          onChangeText={setPassword}
         />
       </View>
 
@@ -31,9 +48,7 @@ export default function Login() {
         <Button
           variant="primary"
           label="Sign in"
-          onPress={() => {
-            router.replace('/(tabs)');
-          }}
+          onPress={login}
           style={{ marginBottom: 12 }}
         />
         <Button
