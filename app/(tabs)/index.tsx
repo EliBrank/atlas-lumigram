@@ -2,9 +2,12 @@ import { StyleSheet, Text, View } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
 import StripImage from '@/components/StripImage';
 import { homeFeed } from '@/placeholder';
+import { Post } from '@/lib/firestore'
+import { useState } from 'react';
 
 export default function Home() {
-  // useEffect to bring in images from db?
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [loading, setLoading] = useState(false);
 
   return (
     <View style={styles.container}>
