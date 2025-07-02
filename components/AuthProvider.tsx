@@ -1,13 +1,19 @@
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, UserCredential } from 'firebase/auth';
-import { createContext, ReactNode, useContext } from 'react';
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  User,
+  UserCredential
+} from 'firebase/auth';
+import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 import { auth } from '@/firebaseConfig';
 
-const AuthContext = createContext({ register, logout, login });
+const AuthContext = createContext<AuthContextProps>({ register, logout, login });
 
 type AuthContextProps = {
   register: (email: string, password: string) => Promise<UserCredential>;
   logout: () => void;
   login: (email: string, password: string) => Promise<UserCredential>;
+  user?: User | null;
 }
 
 export const useAuth = (): AuthContextProps => useContext(AuthContext);
@@ -25,8 +31,21 @@ function login(email: string, password: string) {
 }
 
 export default function AuthProvider({ children }: { children: ReactNode }) {
+  const [user, setUser] = useState(auth.currentUser);
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        setUser(user);
+      } else {
+        setUser(null);
+      }
+    });
+    return () => unsubscribe();
+  }, [])
+
   return (
-    <AuthContext.Provider value={{ register, logout, login }}>
+    <AuthContext.Provider value={{ user, register, logout, login }}>
       {children}
     </AuthContext.Provider>
   );

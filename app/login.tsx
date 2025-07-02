@@ -41,6 +41,7 @@ export default function Login() {
           placeholderTextColor={Colors.dark.text}
           style={styles.inputContainer}
           onChangeText={setPassword}
+          secureTextEntry={true}
         />
       </View>
 

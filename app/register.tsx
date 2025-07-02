@@ -42,6 +42,7 @@ export default function Register() {
           placeholderTextColor={Colors.dark.text}
           style={styles.inputContainer}
           onChangeText={setPassword}
+          secureTextEntry={true}
         />
       </View>
 
