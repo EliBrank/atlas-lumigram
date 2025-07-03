@@ -28,25 +28,24 @@ export default function ImageFeed({ fetchPosts, initialLoad = true }: ImageFeedP
   const [hasMore, setHasMore] = useState(true);
 
   const handleFetch = useCallback(async (loadState: LoadingStates = 'initial') => {
-    if (loading && loadState !== 'refreshing') return;
-
     try {
       setLoading(loadState);
 
+      const currentLastVisible = loadState === 'refreshing' ? null : lastVisible;
       const { posts: newPosts, lastVisible: newLastVisible, hasMore: moreAvailable } =
-        await fetchPosts(loadState, lastVisible);
+        await fetchPosts(loadState, currentLastVisible);
 
       setPosts(prev => loadState === 'refreshing' ? newPosts : [...prev, ...newPosts]);
       setLastVisible(newLastVisible);
-      // assume there are more posts if next batch still reaches cut-off for page size
       setHasMore(moreAvailable);
+      console.log('Fetched posts:', newPosts.length, 'hasMore:', moreAvailable);
     } catch (error) {
       console.error('Error fetching posts:', error);
       alert('Could not fetch posts');
     } finally {
       setLoading(false);
     }
-  }, [fetchPosts, lastVisible]);
+  }, [fetchPosts]); //
 
   // first load
   useEffect(() => {

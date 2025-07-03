@@ -61,7 +61,7 @@ async function getPosts(options: getPostsOptions = {}): Promise<returnedPostsPro
   let q: Query = query(
     postsCollection,
     orderBy('createdAt', 'desc'),
-    limit(onlyFavorites ? favoriteIds.length : limitCount)
+    limit(limitCount + 1)
   );
 
   if (after) {
@@ -78,11 +78,12 @@ async function getPosts(options: getPostsOptions = {}): Promise<returnedPostsPro
     posts = posts.filter(post => favoriteIds.includes(post.id));
   }
 
-  const hasMore = !onlyFavorites && posts.length > limitCount;
-  const lastVisible = querySnapshot.docs[posts.length - 1] || null;
+  const hasMore = posts.length > limitCount;
+  const finalPosts = posts.slice(0, limitCount);
+  const lastVisible = querySnapshot.docs[Math.min(querySnapshot.docs.length - 1, limitCount - 1)] || null;
 
   return {
-    posts: onlyFavorites ? posts : posts.slice(0, limitCount),
+    posts: finalPosts,
     lastVisible,
     hasMore
   }
