@@ -26,7 +26,7 @@ export function useImagePicker() {
   }
 
   function reset() {
-    alert('reset');
+    setImage(undefined);
   }
 
   return { image, openImagePicker, reset }

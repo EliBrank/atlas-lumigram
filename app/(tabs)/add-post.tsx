@@ -26,6 +26,8 @@ export default function AddPost() {
       createdAt: new Date(),
       createdBy: auth.user?.uid!!,
     })
+
+    reset();
   }
 
   return (
@@ -58,7 +60,7 @@ export default function AddPost() {
             <Button
               variant="plain"
               label="Reset"
-              onPress={() => alert('Reset')}
+              onPress={reset}
               textInvert
             />
           </View>
