@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Image, View, StyleSheet, StyleProp, ViewStyle, Text } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 // import Animated, { interpolate } from 'react-native-reanimated';
+import { useFavorites } from '@/hooks/useFavorites';
 
 type StripImageProps = {
   url: string;
@@ -22,6 +23,7 @@ export default function StripImage({
   disableFavorite
 }: StripImageProps) {
   const [showOverlay, setShowOverlay] = useState(false);
+  const { toggleFavorite } = useFavorites();
 
   const longPress = Gesture.LongPress()
     .onStart(() => setShowOverlay(true))
@@ -32,9 +34,8 @@ export default function StripImage({
     .maxDuration(250)
     .numberOfTaps(2)
     .onStart(() => {
-      // TODO: add favorite functionality
       if (!disableFavorite) {
-        
+        toggleFavorite(id);
       }
     })
     .runOnJS(true);

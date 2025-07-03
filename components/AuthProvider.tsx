@@ -5,7 +5,8 @@ import {
   UserCredential
 } from 'firebase/auth';
 import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
-import { auth } from '@/firebaseConfig';
+import { auth, db } from '@/firebaseConfig';
+import { doc, setDoc } from 'firebase/firestore';
 
 const AuthContext = createContext<AuthContextProps>({ register, logout, login });
 
@@ -19,7 +20,15 @@ type AuthContextProps = {
 export const useAuth = (): AuthContextProps => useContext(AuthContext);
 
 function register(email: string, password: string) {
-  return createUserWithEmailAndPassword(auth, email, password);
+  return createUserWithEmailAndPassword(auth, email, password)
+    .then(async (userCredential) => {
+      // also add user document in firestore
+      await setDoc(doc(db, 'users', userCredential.user.uid), {
+        email: userCredential.user.email,
+        createdAt: new Date()
+      });
+      return userCredential;
+    });
 }
 
 function logout() {

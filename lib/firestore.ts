@@ -1,14 +1,18 @@
 import { db } from "@/firebaseConfig";
 import {
   addDoc,
+  arrayUnion,
   collection,
+  doc,
   DocumentSnapshot,
+  getDoc,
   getDocs,
   limit,
   onSnapshot,
   orderBy,
   Query,
   query,
+  setDoc,
   startAfter
 } from "firebase/firestore";
 
@@ -65,7 +69,37 @@ async function getPosts(
   }
 }
 
+// Favorite functionality
+async function addFavorite(userId: string, postId: string) {
+  const userRef = doc(db, 'users', userId);
+  const favoritesRef = collection(userRef, 'favorites');
+
+  const favDoc = await getDoc(doc(favoritesRef, 'posts'))
+  if (!favDoc.exists()) {
+    await setDoc(doc(favoritesRef, 'posts'), {
+      postIds: arrayUnion(postId)
+    });
+  } else {
+    await setDoc(doc(favoritesRef, 'posts'), {
+      postIds: arrayUnion(postId)
+    }, { merge: true });
+  }
+}
+
+async function getFavorites(userId: string): Promise<string[]> {
+  const userRef = doc(db, 'users', userId);
+  const favoritesRef = collection(userRef, 'favorites');
+  const docSnap = await getDoc(doc(favoritesRef, 'posts'));
+
+  if (docSnap.exists()) {
+    return docSnap.data().postIds || [];
+  }
+  return [];
+}
+
 export default {
   addPost,
   getPosts,
+  addFavorite,
+  getFavorites,
 }
