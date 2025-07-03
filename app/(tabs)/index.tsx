@@ -9,13 +9,14 @@ import { RefreshControl } from 'react-native';
 
 const PAGE_SIZE = 2;
 
-export default function Home() { const [posts, setPosts] = useState<Post[]>([]);
+export default function Home() {
   type LoadingStates =
     | 'initial'
     | 'more'
     | 'refreshing'
     | false;
 
+  const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState<LoadingStates>(false);
   const [lastVisible, setLastVisible] = useState<DocumentSnapshot | null>(null);
   const [hasMore, setHasMore] = useState(true);
