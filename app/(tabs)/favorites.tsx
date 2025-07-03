@@ -1,33 +1,21 @@
 import { StyleSheet, Text, View } from 'react-native';
-import { FlashList } from '@shopify/flash-list';
-import StripImage from '@/components/StripImage';
-import { favoritesFeed } from '@/placeholder';
+import { useAuth } from '@/components/AuthProvider';
+import ImageFeed, { LoadingStates } from '@/components/ImageFeed';
+import firestore from '@/lib/firestore';
+import { useCallback } from 'react';
+import { DocumentSnapshot } from 'firebase/firestore';
 
 export default function Favorites() {
+  const { user } = useAuth();
+  const fetchFavorites = useCallback(async (loadState: LoadingStates = 'initial', lastVisible: DocumentSnapshot | null) => {
+    return firestore.getPosts({
+      after: loadState === 'refreshing' ? null : lastVisible,
+      onlyFavorites: true,
+      userId: user?.uid
+    });
+  }, []);
+
   return (
-    <View style={styles.container}>
-      <FlashList
-        data={favoritesFeed}
-        renderItem={({ item }) => (
-          <StripImage
-            url={item.image}
-            caption={item.caption}
-            id={item.id}
-            createdBy={item.createdBy}
-            imageStyle={{ marginBottom: 16 }}
-            disableFavorite
-          />
-        )}
-        estimatedItemSize={100}
-        keyExtractor={(item) => item.id}
-      />
-    </View>
+    <ImageFeed fetchPosts={fetchFavorites} />
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-});

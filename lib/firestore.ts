@@ -33,24 +33,35 @@ async function addPost(post: NewPost) {
   await addDoc(postsCollection, post);
 }
 
+type getPostsOptions = {
+  limitCount?: number;
+  after?: DocumentSnapshot | null;
+  onlyFavorites?: boolean;
+  userId?: string;
+}
+
 type returnedPostsProps = {
   posts: Post[];
   lastVisible: DocumentSnapshot | null;
+  hasMore: boolean;
 }
 
-async function getPosts(
-  options: {
-    limitCount?: number;
-    after?: DocumentSnapshot | null;
-  } = {}
-): Promise<returnedPostsProps> {
-  const { limitCount = 10, after = null } = options;
+async function getPosts(options: getPostsOptions = {}): Promise<returnedPostsProps> {
+  const { limitCount = 10, after = null, onlyFavorites = false, userId } = options;
+
+  let favoriteIds: string[] = [];
+  if (onlyFavorites && userId) {
+    favoriteIds = await getFavorites(userId);
+    if (favoriteIds.length === 0) {
+      return { posts: [], lastVisible: null, hasMore: false }
+    }
+  }
 
   // main query
   let q: Query = query(
     postsCollection,
     orderBy('createdAt', 'desc'),
-    limit(limitCount)
+    limit(onlyFavorites ? favoriteIds.length : limitCount)
   );
 
   if (after) {
@@ -58,14 +69,22 @@ async function getPosts(
   }
 
   const querySnapshot = await getDocs(q);
-  const posts = querySnapshot.docs.map(doc => ({
+  let posts = querySnapshot.docs.map(doc => ({
     id: doc.id,
     ...doc.data()
   } as Post));
 
+  if (onlyFavorites) {
+    posts = posts.filter(post => favoriteIds.includes(post.id));
+  }
+
+  const hasMore = !onlyFavorites && posts.length > limitCount;
+  const lastVisible = querySnapshot.docs[posts.length - 1] || null;
+
   return {
-    posts,
-    lastVisible: querySnapshot.docs[querySnapshot.docs.length - 1] || null
+    posts: onlyFavorites ? posts : posts.slice(0, limitCount),
+    lastVisible,
+    hasMore
   }
 }
 
