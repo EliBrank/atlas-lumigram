@@ -33,7 +33,9 @@ export default function StripImage({
     .numberOfTaps(2)
     .onStart(() => {
       // TODO: add favorite functionality
-      if (!disableFavorite) alert('Favorited!');
+      if (!disableFavorite) {
+        
+      }
     })
     .runOnJS(true);
 
